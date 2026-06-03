@@ -8,10 +8,4 @@ El pipeline fue desarrollado utilizando HMMER versión 3.4, disponible en http:/
 
 Dentro del pipeline se implementa programación orientada a objetos para representar la información de cada proteína de manera estructurada. Se define una clase Protein que almacena el identificador UniProt, la secuencia proteica y las familias asignadas, además de incluir métodos para agregar familias y generar un resumen de la información asociada a cada proteína. Esta estructura permite una organización más clara y facilita el análisis posterior de los resultados obtenidos.
 
-El repositorio se encuentra organizado en diferentes carpetas con el fin de mantener una estructura clara y reproducible. La carpeta data contiene los archivos de entrada, los cuales no se incluyen en el repositorio mediante el uso de .gitignore. La carpeta scripts contiene los scripts principales del pipeline, mientras que src contiene las clases y funciones utilizadas en el análisis. La carpeta results almacena los resultados generados durante la ejecución del pipeline, y docs incluye documentación complementaria del proyecto.
 
-Con el objetivo de mantener el repositorio limpio y enfocado únicamente en el código, se implementa un archivo .gitignore que excluye bases de datos completas de Pfam, archivos intermedios de ejecución y resultados temporales del análisis.
-
-Como referencia metodológica, se utilizan la base de datos Pfam y la herramienta HMMER, ampliamente utilizadas en bioinformática para el análisis de dominios proteicos, junto con la base de datos UniProt como fuente de secuencias proteicas.
-
-Este proyecto fue desarrollado en el marco de formación en biología con el propósito de aplicar herramientas bioinformáticas en el análisis de familias proteicas mediante modelos estadísticos, integrando programación, bases de datos biológicas y análisis funcional de proteínas.
