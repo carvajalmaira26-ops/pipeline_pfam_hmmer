@@ -21,11 +21,6 @@ class ProteinaResult:
             "e_value": float(e_value)
         }) # Lista de diccionarios con familias y E-values
 
-    def agregar_familia(self, familia_nombre, e_value):
-        self.familias_encontradas.append({
-            "familia": familia_nombre,
-            "e_value": float(e_value)
-        })
 
 
 # --- ETAPA DE EJECUCIÓN DE HMMER ---
