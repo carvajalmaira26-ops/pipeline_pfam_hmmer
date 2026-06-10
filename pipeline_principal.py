@@ -1,66 +1,55 @@
 import os
-from modulo_descarga import descargar_secuencias_uniprot
-from modulo_hmmer import ejecutar_hmmscan, analizar_resultados_hmmer
-
-# ANEXO 1: Lista de familias Pfam de interés
-FAMILIAS_ANEXO1 = [
-    "Protein_kinase", "Pkinase_Tyr", "Ras", "SH2", "SH3_1", "zf-C2H2", 
-    "Homeobox", "HTH_1", "bZIP_1", "Myb_DNA-binding", "RRM_1", "DEAD", 
-    "KH_1", "dsrm", "ABC_tran", "MFS_1", "Ion_trans", "HlyD", "Aminotran_1_2", 
-    "Aldedh", "TIM", "NAD_binding_1", "GST_C_family", "WD40", "Ank", "TPR_1", 
-    "LRR_1", "HSP70", "HSP20", "DnaJ", "Response_reg", "HisKA", "Peptidase_M16", 
-    "Sigma70_r2", "Immunoglobulin", "EGF", "Cadherin", "Fibronectin"
-]
-
-# ANEXO 2: Lista de IDs de UniProt a evaluar
-PROTEINAS_ANEXO2 = [
-    "P00519", "P42684", "P12931", "P06241", "P07947", "Q06187", "P43403", "P43405",
-    "P62993", "P01112", "P01116", "P01111", "P04049", "P31749", "P28482", "P27361",
-    "P00533", "P21802", "P16234", "P12956", "P29353", "P42681", "P35222", "P62937",
-    "P29317", "P08047", "P15056", "P40763", "P42224", "P15924", "P10242", "P19838",
-    "P11473", "P61244", "Q9Y2T1", "P08107", "P0A6Y8", "P0A6W5", "P0A9Q7", "P0A799",
-    "P0A7Y4", "P0A8V2", "P39451", "P11142", "P13569", "P22681", "P98160", "P12814",
-    "Q92793", "Q13485"
-]
+from src.modulo_descarga import descargar_secuencias_uniprot
+from src.modulo_hmmer import ejecutar_hmmscan, parsear_resultados_hmmer
+from src.modulo_reporte import exportar_reporte_csv
 
 def main():
-    print("====================================================")
-    print("      INICIANDO PIPELINE BIOINFORMÁTICO PFAM       ")
-    print("====================================================\n")
+    print("=" * 60)
+    print("      INICIANDO PIPELINE BIOINFORMÁTICO OPTIMIZADO      ")
+    print("=" * 60)
+
+    # Definición de rutas con la base de datos reducida (Anexo 1)
+    RUTA_PROTEINAS_TXT = os.path.join("data", "proteinas_anexo2.txt")
+    RUTA_FAMILIAS_TXT = os.path.join("data", "familias_anexo1.txt")
     
-    # Base de datos completa de Pfam que acabamos de descargar
-    bd_pfam = "data/database/Pfam-A.hmm" 
-    
-    if not os.path.exists(bd_pfam):
-        print(f"ERROR CRÍTICO: No se encuentra el archivo de base de datos '{bd_pfam}'.")
-        print("Por favor, asegúrate de haber ejecutado los comandos wget y gunzip en la terminal.")
+    FASTA_SALIDA = os.path.join("data", "uniprot", "secuencias_totales.fasta")
+    HMM_DATABASE = os.path.join("data", "database", "pfam_anexo1.hmm")  # Base de datos optimizada
+    HMMER_OUTPUT = os.path.join("results", "resultado_hmmer.tblout")
+    CSV_OUTPUT = os.path.join("results", "reporte_final.csv")  # Reporte final Excel/CSV
+
+    # 1. Descarga de secuencias
+    if not descargar_secuencias_uniprot(RUTA_PROTEINAS_TXT, FASTA_SALIDA):
+        print("Error en el paso de descarga. Pipeline interrumpido.")
         return
 
-    # 1. Ejecutar Descarga Automatizada de UniProt
-    archivo_fasta = "data/uniprot/secuencias_totales.fasta"
-    descargar_secuencias_uniprot(PROTEINAS_ANEXO2, archivo_fasta)
     print("-" * 50)
 
-    # 2. Ejecutar HMMER hmmscan
-    archivo_reporte = "results/resultado_hmmer.tblout"
-    ejecutar_hmmscan(bd_pfam, archivo_fasta, archivo_reporte)
+    # 2. Análisis HMMER ultrarrápido
+    if not os.path.exists(HMM_DATABASE):
+        print(f"Error: No se encuentra la base de datos optimizada en: {HMM_DATABASE}")
+        print("Por favor ejecuta primero: python scripts/optimizar_pfam.py")
+        return
+
+    if not ejecutar_hmmscan(HMM_DATABASE, FASTA_SALIDA, HMMER_OUTPUT):
+        print("Error en la ejecución de hmmscan. Pipeline interrumpido.")
+        return
+
     print("-" * 50)
 
-    # 3. Analizar y Cargar en la Clase POO
-    resultado_objetos = analizar_resultados_hmmer(archivo_reporte, FAMILIAS_ANEXO1)
+    # 3. Parseo Orientado a Objetos
+    print("--> Parseando resultados y construyendo objetos de la clase Proteina...")
+    lista_proteinas = parsear_resultados_hmmer(HMMER_OUTPUT, RUTA_FAMILIAS_TXT)
     print("-" * 50)
 
-    # 4. Mostrar el reporte final solicitado en clase
-    print("\n================ REPORTES DE FAMILIAS DETECTADAS ================")
-    if not resultado_objetos:
-        print("No se mapearon familias del Anexo 1 en las proteínas provistas.")
+    # 4. Exportación de Resultados a CSV
+    if exportar_reporte_csv(lista_proteinas, CSV_OUTPUT):
+        print("--> Proceso de guardado finalizado de forma correcta.")
     else:
-        for id_prot, obj_proteina in resultado_objetos.items():
-            print(f"\nProteína UniProt ID: {obj_proteina.query_id}")
-            print("  Familias Pfam asignadas:")
-            for fam in obj_proteina.familias_encontradas:
-                print(f"    - {fam['familia']} (E-value: {fam['e_value']})")
-    print("=================================================================\n")
+        print("Advertencia: No se pudo generar el reporte CSV.")
+
+    print("=" * 60)
+    print("            ¡PIPELINE FINALIZADO CON ÉXITO!             ")
+    print("=" * 60)
 
 if __name__ == "__main__":
     main()
