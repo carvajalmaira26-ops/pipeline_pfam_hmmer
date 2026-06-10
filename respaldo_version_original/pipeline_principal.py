@@ -29,7 +29,7 @@ def main():
     print("====================================================\n")
     
     # Base de datos completa de Pfam que acabamos de descargar
-    bd_pfam = "data/database/Pfam-A.hmm" 
+    bd_pfam = "Pfam-A.hmm" 
     
     if not os.path.exists(bd_pfam):
         print(f"ERROR CRÍTICO: No se encuentra el archivo de base de datos '{bd_pfam}'.")
@@ -37,12 +37,12 @@ def main():
         return
 
     # 1. Ejecutar Descarga Automatizada de UniProt
-    archivo_fasta = "data/uniprot/secuencias_totales.fasta"
+    archivo_fasta = "secuencias_totales.fasta"
     descargar_secuencias_uniprot(PROTEINAS_ANEXO2, archivo_fasta)
     print("-" * 50)
 
     # 2. Ejecutar HMMER hmmscan
-    archivo_reporte = "results/resultado_hmmer.tblout"
+    archivo_reporte = "resultado_hmmer.tblout"
     ejecutar_hmmscan(bd_pfam, archivo_fasta, archivo_reporte)
     print("-" * 50)
 

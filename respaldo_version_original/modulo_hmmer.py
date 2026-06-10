@@ -3,23 +3,9 @@ import subprocess
 
 # --- AQUÍ ESTÁ LA CLASE (POO) REQUERIDA ---
 class ProteinaResult:
-
-    def __init__(self,
-                 query_id,
-                 descripcion="No disponible",
-                 longitud=0):
-
+    def __init__(self, query_id):
         self.query_id = query_id
-        self.descripcion = descripcion
-        self.longitud = longitud
-        self.familias_encontradas = []
-
-    def agregar_familia(self, familia_nombre, e_value):
-
-        self.familias_encontradas.append({
-            "familia": familia_nombre,
-            "e_value": float(e_value)
-        }) # Lista de diccionarios con familias y E-values
+        self.familias_encontradas = [] # Lista de diccionarios con familias y E-values
 
     def agregar_familia(self, familia_nombre, e_value):
         self.familias_encontradas.append({

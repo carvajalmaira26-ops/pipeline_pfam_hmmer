@@ -1,12 +1,23 @@
-# Ignorar archivos de datos y resultados pesados
+# Datos y resultados
 *.fasta
 *.hmm
 *.tblout
 *.txt
+
+# Archivos HMMER
 *.h3f
 *.h3i
 *.h3m
 *.h3p
+
+# Entorno virtual
+env/
+
+# Cache Python
 __pycache__/
-resultados/
-datos/
+
+# Carpetas de resultados
+results/
+
+# Datos descargados
+data/

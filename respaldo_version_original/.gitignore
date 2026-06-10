@@ -1,0 +1,12 @@
+# Ignorar archivos de datos y resultados pesados
+*.fasta
+*.hmm
+*.tblout
+*.txt
+*.h3f
+*.h3i
+*.h3m
+*.h3p
+__pycache__/
+resultados/
+datos/
