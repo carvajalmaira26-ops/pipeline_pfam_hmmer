@@ -1,4 +1,4 @@
-Pipeline Bioinformático para la Identificación de Familias Pfam mediante HMMER
+## Pipeline Bioinformático para la Identificación de Familias Pfam mediante HMMER
 
 Este repositorio contiene el desarrollo de un pipeline bioinformático automatizado diseñado para clasificar funcionalmente e identificar los dominios biológicos asociados a un conjunto de 50 secuencias proteicas obtenidas desde UniProt. El análisis molecular se realiza mediante perfiles probabilísticos basados en Modelos Ocultos de Márkov (HMM) utilizando la suite de herramientas HMMER.
 
